@@ -23,11 +23,6 @@ namespace TrakingCar.Models
         [Column("location")]
         public string? LocationName { get; set; }
 
-        [ForeignKey("Location")]
-        [Column("locationId")]
-        public Guid? LocationId { get; set; }
-        public Location? Location { get; set; }
-
         public DateTime? DeletedAt { get; set; }
 
         //[Required]

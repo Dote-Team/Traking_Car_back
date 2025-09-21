@@ -12,7 +12,7 @@ using TrakingCar.Data;
 namespace TrakingCar.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250921001623_init")]
+    [Migration("20250921180645_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -283,10 +283,6 @@ namespace TrakingCar.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("detailes");
 
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("locationId");
-
                     b.Property<string>("LocationName")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("location");
@@ -300,8 +296,6 @@ namespace TrakingCar.Migrations
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("OwnerShip", (string)null);
                 });
@@ -340,16 +334,6 @@ namespace TrakingCar.Migrations
                     b.Navigation("Ownership");
                 });
 
-            modelBuilder.Entity("TrakingCar.Models.Ownership", b =>
-                {
-                    b.HasOne("TrakingCar.Models.Location", "Location")
-                        .WithMany("Ownerships")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("TrakingCar.Models.Car", b =>
                 {
                     b.Navigation("Attachments");
@@ -360,8 +344,6 @@ namespace TrakingCar.Migrations
                     b.Navigation("Attachments");
 
                     b.Navigation("Cars");
-
-                    b.Navigation("Ownerships");
                 });
 
             modelBuilder.Entity("TrakingCar.Models.Ownership", b =>

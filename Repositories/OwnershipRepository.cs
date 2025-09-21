@@ -77,7 +77,6 @@ namespace TrakingCar.Repositories
                 Name = ownership.Name,
                 Detailes = ownership.Detailes,
                 LocationName = ownership.LocationName,
-                LocationId = ownership.LocationId,
                 Cars = ownership.Cars?.Select(c => new CarDto
                 {
                     Id = c.Id,

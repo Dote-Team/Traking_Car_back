@@ -48,6 +48,23 @@ namespace TrakingCar.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OwnerShip",
+                columns: table => new
+                {
+                    UniqueID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    detailes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OwnerShip", x => x.UniqueID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -67,30 +84,6 @@ namespace TrakingCar.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.UniqueID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OwnerShip",
-                columns: table => new
-                {
-                    UniqueID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    detailes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    locationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    created_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OwnerShip", x => x.UniqueID);
-                    table.ForeignKey(
-                        name: "FK_OwnerShip_Location_locationId",
-                        column: x => x.locationId,
-                        principalTable: "Location",
-                        principalColumn: "UniqueID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,11 +170,6 @@ namespace TrakingCar.Migrations
                 name: "IX_Car_ownershipId",
                 table: "Car",
                 column: "ownershipId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OwnerShip_locationId",
-                table: "OwnerShip",
-                column: "locationId");
         }
 
         /// <inheritdoc />
@@ -200,10 +188,10 @@ namespace TrakingCar.Migrations
                 name: "Car");
 
             migrationBuilder.DropTable(
-                name: "OwnerShip");
+                name: "Location");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "OwnerShip");
         }
     }
 }

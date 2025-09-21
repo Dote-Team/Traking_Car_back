@@ -37,6 +37,5 @@ namespace TrakingCar.Models
         // 🔗 علاقات
         public ICollection<Car> Cars { get; set; } = new List<Car>();
         public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
-        public ICollection<Ownership> Ownerships { get; set; } = new List<Ownership>();
     }
 }
