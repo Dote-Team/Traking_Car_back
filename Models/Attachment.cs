@@ -1,8 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TrakingCar.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum AttachmentType
+    {
+        [EnumMember(Value = "صورة تخويل")]
+        Authorization,  
+        [EnumMember(Value = "صورة سنوية")]
+        Annual,         
+
+        [EnumMember(Value = "صورة مستند")]
+        Document        
+    }
     // ------------------------------------------------------
     // Attachment Table
     // ------------------------------------------------------
@@ -16,6 +29,9 @@ namespace TrakingCar.Models
 
         [Column("file")]
         public string? File { get; set; }
+
+        [Column("type")]
+        public string? Type { get; set; } = null!;
 
         [ForeignKey("Location")]
         [Column("locationId")]

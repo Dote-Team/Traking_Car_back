@@ -1,0 +1,47 @@
+{
+  "info": {
+    "_postman_id": "c5f0a1d2-1234-4567-89ab-cdef01234567",
+    "name": "Create Cars Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Car with Attachments",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer <YOUR_TOKEN>",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "CarType", "value": "Sedan", "type": "text" },
+            { "key": "ChassisNumber", "value": "ABC123", "type": "text" },
+            { "key": "CarNumber", "value": "1234XYZ", "type": "text" },
+            { "key": "Status", "value": "Active", "type": "text" },
+            { "key": "OwnershipId", "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "type": "text" },
+            { "key": "LocationId", "value": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "type": "text" },
+            { "key": "ReceiptDate", "value": "2025-09-21T19:46:34", "type": "text" },
+            { "key": "BodyCondition", "value": "Good", "type": "text" },
+            { "key": "Note", "value": "Test note", "type": "text" },
+            { "key": "TrackingCode", "value": "TRK001", "type": "text" },
+            { "key": "AnnualImageFile", "type": "file", "src": "/path/to/annual.jpg" },
+            { "key": "AuthorizationImageFile", "type": "file", "src": "/path/to/auth.jpg" },
+            { "key": "DocumentImageFile", "type": "file", "src": "/path/to/doc.pdf" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/cars/create",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "cars", "create"]
+        }
+      }
+    }
+  ]
+}

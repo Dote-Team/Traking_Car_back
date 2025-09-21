@@ -110,6 +110,10 @@ namespace TrakingCar.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("locationId");
 
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("type");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("updated_at");

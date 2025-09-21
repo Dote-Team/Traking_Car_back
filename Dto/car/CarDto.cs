@@ -24,6 +24,7 @@ namespace TrakingCar.Dtos
     public class AttachmentDto
     {
         public Guid? Id { get; set; }
+        public string? Type { get; set; }
         public string? File { get; set; } 
 
     }
