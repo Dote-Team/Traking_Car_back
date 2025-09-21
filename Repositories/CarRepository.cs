@@ -20,11 +20,79 @@ namespace TrakingCar.Repositories
             _mapper = mapper;
         }
 
+        //public async Task<bool> CreateCarsAsync(List<CreateCarDto> dtos)
+        //{
+        //    using var transaction = await _context.Database.BeginTransactionAsync();
+        //    try
+        //    {
+        //        foreach (var dto in dtos)
+        //        {
+        //            var car = new Car
+        //            {
+        //                CarType = dto.CarType,
+        //                ChassisNumber = dto.ChassisNumber,
+        //                CarNumber = dto.CarNumber,
+        //                Status = dto.Status,
+        //                OwnershipId = dto.OwnershipId,
+        //                LocationId = dto.LocationId,
+        //                ReceiptDate = dto.ReceiptDate,
+        //                BodyCondition = dto.BodyCondition,
+        //                Note = dto.Note,
+        //                TrackingCode = dto.TrackingCode,
+        //                CreatedAt = DateTime.UtcNow,
+        //                UpdatedAt = DateTime.UtcNow
+        //            };
+
+        //            // حفظ المرفقات
+        //            if (dto.Attachments != null && dto.Attachments.Any())
+        //            {
+        //                car.Attachments = new List<Attachment>();
+        //                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
+        //                if (!Directory.Exists(uploadPath))
+        //                    Directory.CreateDirectory(uploadPath);
+
+        //                foreach (var attach in dto.Attachments)
+        //                {
+        //                    if (attach.FileContent != null)
+        //                    {
+        //                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(attach.FileContent.FileName)}";
+        //                        var filePath = Path.Combine(uploadPath, fileName);
+
+        //                        using var stream = new FileStream(filePath, FileMode.Create);
+        //                        await attach.FileContent.CopyToAsync(stream);
+
+        //                        car.Attachments.Add(new Attachment
+        //                        {
+        //                            File = fileName,
+        //                            LocationId = attach.LocationId
+        //                        });
+        //                    }
+        //                }
+        //            }
+
+        //            await _context.Cars.AddAsync(car);
+        //        }
+
+        //        await _context.SaveChangesAsync();
+        //        await transaction.CommitAsync();
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        await transaction.RollbackAsync();
+        //        throw;
+        //    }
+        //}
+
         public async Task<bool> CreateCarsAsync(List<CreateCarDto> dtos)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
                 foreach (var dto in dtos)
                 {
                     var car = new Car
@@ -43,31 +111,60 @@ namespace TrakingCar.Repositories
                         UpdatedAt = DateTime.UtcNow
                     };
 
-                    // حفظ المرفقات
-                    if (dto.Attachments != null && dto.Attachments.Any())
+                    car.Attachments = new List<Attachment>();
+
+                    // ✅ صورة سنوية
+                    if (dto.AnnualImageFile != null)
                     {
-                        car.Attachments = new List<Attachment>();
-                        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
-                        if (!Directory.Exists(uploadPath))
-                            Directory.CreateDirectory(uploadPath);
+                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(dto.AnnualImageFile.FileName)}";
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using var stream = new FileStream(filePath, FileMode.Create);
+                        await dto.AnnualImageFile.CopyToAsync(stream);
 
-                        foreach (var attach in dto.Attachments)
+                        car.Attachments.Add(new Attachment
                         {
-                            if (attach.FileContent != null)
-                            {
-                                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(attach.FileContent.FileName)}";
-                                var filePath = Path.Combine(uploadPath, fileName);
+                            File = fileName,
+                            LocationId = dto.LocationId,
+                            Type = "صورة سنوية",
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        });
+                    }
 
-                                using var stream = new FileStream(filePath, FileMode.Create);
-                                await attach.FileContent.CopyToAsync(stream);
+                    // ✅ صورة تخويل
+                    if (dto.AuthorizationImageFile != null)
+                    {
+                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(dto.AuthorizationImageFile.FileName)}";
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using var stream = new FileStream(filePath, FileMode.Create);
+                        await dto.AuthorizationImageFile.CopyToAsync(stream);
 
-                                car.Attachments.Add(new Attachment
-                                {
-                                    File = fileName,
-                                    LocationId = attach.LocationId
-                                });
-                            }
-                        }
+                        car.Attachments.Add(new Attachment
+                        {
+                            File = fileName,
+                            LocationId = dto.LocationId,
+                            Type = "صورة تخويل",
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        });
+                    }
+
+                    // ✅ صورة مستند
+                    if (dto.DocumentImageFile != null)
+                    {
+                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(dto.DocumentImageFile.FileName)}";
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using var stream = new FileStream(filePath, FileMode.Create);
+                        await dto.DocumentImageFile.CopyToAsync(stream);
+
+                        car.Attachments.Add(new Attachment
+                        {
+                            File = fileName,
+                            LocationId = dto.LocationId,
+                            Type = "صورة مستند",
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        });
                     }
 
                     await _context.Cars.AddAsync(car);
@@ -83,6 +180,7 @@ namespace TrakingCar.Repositories
                 throw;
             }
         }
+
         public async Task<bool> UpdateCarAsync(Guid id, UpdateCarDto updateDto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

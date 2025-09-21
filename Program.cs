@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 using TrackingCar.Interfaces;
+using TrackingCar.Middlewares;
 using TrackingCar.Repositories;
 using TrakingCar.Data;
 using TrakingCar.Interfaces;
@@ -101,6 +102,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<IAuditLogger, AuditLogger>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();

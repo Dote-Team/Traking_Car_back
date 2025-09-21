@@ -12,17 +12,12 @@ namespace TrakingCar.Dto.Car
         public Guid? LocationId { get; set; }
         public DateTime ReceiptDate { get; set; }
         public string? BodyCondition { get; set; }
-        public string Note { get; set; }
-        public string TrackingCode { get; set; }
+        public string? Note { get; set; }
+        public string? TrackingCode { get; set; }
 
-        // ✅ قائمة المرفقات مع كامل البيانات
-        public List<CreateAttachmentDto>? Attachments { get; set; }
-    }
-
-    public class CreateAttachmentDto
-    {
-        public string? FileName { get; set; }         
-        public Guid? LocationId { get; set; }         
-        public IFormFile? FileContent { get; set; }  
+        // ✅ المرفقات حسب النوع
+        public IFormFile? AnnualImageFile { get; set; }        // صورة سنوية
+        public IFormFile? AuthorizationImageFile { get; set; } // صورة تخويل
+        public IFormFile? DocumentImageFile { get; set; }      // صورة مستند
     }
 }

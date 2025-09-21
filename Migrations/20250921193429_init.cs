@@ -128,6 +128,7 @@ namespace TrakingCar.Migrations
                 {
                     UniqueID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     file = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     locationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CarId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),

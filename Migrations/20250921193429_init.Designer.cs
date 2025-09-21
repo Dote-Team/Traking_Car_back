@@ -12,7 +12,7 @@ using TrakingCar.Data;
 namespace TrakingCar.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250921180645_init")]
+    [Migration("20250921193429_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -112,6 +112,10 @@ namespace TrakingCar.Migrations
                     b.Property<Guid?>("LocationId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("locationId");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("type");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2")

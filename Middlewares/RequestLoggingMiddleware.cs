@@ -44,7 +44,7 @@ public class RequestLoggingMiddleware
 
         try
         {
-            await _next(context); // استدعاء الـ pipeline التالي
+            await _next(context); 
         }
         catch (Exception ex)
         {
