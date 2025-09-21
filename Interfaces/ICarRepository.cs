@@ -1,7 +1,6 @@
 ﻿using TrakingCar.Models;
 using TrakingCar.Dto.Car;
 using TrackingCar.Interfaces;
-using TrakingCar.Dto.car;
 
 namespace TrakingCar.Interfaces
 {

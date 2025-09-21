@@ -5,7 +5,6 @@ using TrakingCar.Data;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TrackingCar.Repositories;
-using TrakingCar.Dto.car;
 
 namespace TrakingCar.Repositories
 {
@@ -203,42 +202,92 @@ namespace TrakingCar.Repositories
                 car.TrackingCode = updateDto.TrackingCode;
                 car.UpdatedAt = DateTime.UtcNow;
 
-                // إدارة الملفات
+                // مسار رفع الملفات
                 var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
                 if (!Directory.Exists(uploadPath))
                     Directory.CreateDirectory(uploadPath);
 
-                // حذف الملفات القديمة
-                if (car.Attachments != null && car.Attachments.Any())
+                // رفع الملفات الجديدة حسب النوع مع حذف القديم فقط عند التغيير
+                if (updateDto.AnnualImageFile != null)
                 {
-                    foreach (var attachment in car.Attachments)
+                    // حذف الصورة السنوية القديمة إذا كانت موجودة
+                    var oldAnnual = car.Attachments?.FirstOrDefault(a => a.Type == "صورة سنوية");
+                    if (oldAnnual != null)
                     {
-                        var filePath = Path.Combine(uploadPath, attachment.File);
-                        if (File.Exists(filePath))
-                            File.Delete(filePath);
+                        var oldPath = Path.Combine(uploadPath, oldAnnual.File);
+                        if (File.Exists(oldPath))
+                            File.Delete(oldPath);
+                        _context.Attachments.Remove(oldAnnual);
                     }
 
-                    _context.Attachments.RemoveRange(car.Attachments);
-                }
+                    // رفع الملف الجديد
+                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(updateDto.AnnualImageFile.FileName)}";
+                    var filePath = Path.Combine(uploadPath, fileName);
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await updateDto.AnnualImageFile.CopyToAsync(stream);
 
-                // رفع الملفات الجديدة
-                if (updateDto.AttachmentsFiles != null && updateDto.AttachmentsFiles.Any())
-                {
-                    car.Attachments = new List<Attachment>();
-                    foreach (var file in updateDto.AttachmentsFiles)
+                    car.Attachments.Add(new Attachment
                     {
-                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                        var filePath = Path.Combine(uploadPath, fileName);
-                        using var stream = new FileStream(filePath, FileMode.Create);
-                        await file.CopyToAsync(stream);
-
-                        car.Attachments.Add(new Attachment
-                        {
-                            File = fileName,
-                            LocationId = updateDto.LocationId,
-                        });
-                    }
+                        File = fileName,
+                        LocationId = updateDto.LocationId,
+                        Type = "صورة سنوية",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
                 }
+
+                if (updateDto.AuthorizationImageFile != null)
+                {
+                    var oldAuth = car.Attachments?.FirstOrDefault(a => a.Type == "صورة تخويل");
+                    if (oldAuth != null)
+                    {
+                        var oldPath = Path.Combine(uploadPath, oldAuth.File);
+                        if (File.Exists(oldPath))
+                            File.Delete(oldPath);
+                        _context.Attachments.Remove(oldAuth);
+                    }
+
+                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(updateDto.AuthorizationImageFile.FileName)}";
+                    var filePath = Path.Combine(uploadPath, fileName);
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await updateDto.AuthorizationImageFile.CopyToAsync(stream);
+
+                    car.Attachments.Add(new Attachment
+                    {
+                        File = fileName,
+                        LocationId = updateDto.LocationId,
+                        Type = "صورة تخويل",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
+
+                if (updateDto.DocumentImageFile != null)
+                {
+                    var oldDoc = car.Attachments?.FirstOrDefault(a => a.Type == "صورة مستند");
+                    if (oldDoc != null)
+                    {
+                        var oldPath = Path.Combine(uploadPath, oldDoc.File);
+                        if (File.Exists(oldPath))
+                            File.Delete(oldPath);
+                        _context.Attachments.Remove(oldDoc);
+                    }
+
+                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(updateDto.DocumentImageFile.FileName)}";
+                    var filePath = Path.Combine(uploadPath, fileName);
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await updateDto.DocumentImageFile.CopyToAsync(stream);
+
+                    car.Attachments.Add(new Attachment
+                    {
+                        File = fileName,
+                        LocationId = updateDto.LocationId,
+                        Type = "صورة مستند",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
+
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
