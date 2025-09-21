@@ -5,6 +5,7 @@ using TrakingCar.Data;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TrackingCar.Repositories;
+using TrakingCar.Dtos;
 
 namespace TrakingCar.Repositories
 {
@@ -300,30 +301,95 @@ namespace TrakingCar.Repositories
             }
         }
 
-        public async Task<IEnumerable<Car>> GetPaginatedAsync(int pageNumber, int pageSize, string? search = null)
+        public async Task<IEnumerable<CarDto>> GetPaginatedAsync(
+            int pageNumber,
+            int pageSize,
+            string? search = null,
+            Guid? locationId = null,
+            Guid? ownershipId = null)
         {
             var query = _context.Cars
                 .Include(c => c.Attachments)
+                .Include(c => c.Location)
+                .Include(c => c.Ownership)
                 .Where(c => c.DeletedAt == null);
 
+            // ✅ فلترة بالكلمة المفتاحية
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(c => c.CarNumber.Contains(search) || c.CarType.Contains(search));
+                query = query.Where(c =>
+                    (c.CarNumber != null && c.CarNumber.Contains(search)) ||
+                    (c.CarType != null && c.CarType.Contains(search)) ||
+                    (c.ChassisNumber != null && c.ChassisNumber.Contains(search)));
+            }
+
+            // ✅ فلترة بالـ LocationId
+            if (locationId.HasValue)
+            {
+                query = query.Where(c => c.LocationId == locationId.Value);
+            }
+
+            // ✅ فلترة بالـ OwnershipId
+            if (ownershipId.HasValue)
+            {
+                query = query.Where(c => c.OwnershipId == ownershipId.Value);
             }
 
             return await query
                 .OrderBy(c => c.CarNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(c => new CarDto
+                {
+                    Id = c.Id,
+                    CarType = c.CarType,
+                    CarNumber = c.CarNumber,
+                    ChassisNumber = c.ChassisNumber,
+                    Status = c.Status,
+                    TrackingCode = c.TrackingCode,
+                    BodyCondition = c.BodyCondition,
+                    Note = c.Note,
+                    ReceiptDate = c.ReceiptDate,
+                    LocationId = c.LocationId,
+                    OwnershipId = c.OwnershipId,
+                    LocationName = c.Location != null ? c.Location.Name : null,
+                    OwnershipName = c.Ownership != null ? c.Ownership.Name : null,
+                    Attachments = c.Attachments.Select(a => new AttachmentDto
+                    {
+                        Id = a.Id,
+                        File = a.File,
+                        Type = a.Type
+                    }).ToList()
+                })
                 .ToListAsync();
         }
 
-        public async Task<int> GetCountAsync(string? search = null)
-        {
-            var query = _context.Cars.Where(c => c.DeletedAt == null);
 
+        public async Task<int> GetCountAsync(string? search = null, Guid? locationId = null, Guid? ownershipId = null)
+        {
+            var query = _context.Cars
+                .Where(c => c.DeletedAt == null);
+
+            // فلترة بالكلمة المفتاحية
             if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(c => c.CarNumber.Contains(search) || c.CarType.Contains(search));
+            {
+                query = query.Where(c =>
+                    (c.CarNumber != null && c.CarNumber.Contains(search)) ||
+                    (c.CarType != null && c.CarType.Contains(search)) ||
+                    (c.ChassisNumber != null && c.ChassisNumber.Contains(search)));
+            }
+
+            // فلترة بالـ LocationId
+            if (locationId.HasValue)
+            {
+                query = query.Where(c => c.LocationId == locationId.Value);
+            }
+
+            // فلترة بالـ OwnershipId
+            if (ownershipId.HasValue)
+            {
+                query = query.Where(c => c.OwnershipId == ownershipId.Value);
+            }
 
             return await query.CountAsync();
         }

@@ -1,6 +1,7 @@
 ﻿using TrakingCar.Models;
 using TrakingCar.Dto.Car;
 using TrackingCar.Interfaces;
+using TrakingCar.Dtos;
 
 namespace TrakingCar.Interfaces
 {
@@ -9,8 +10,13 @@ namespace TrakingCar.Interfaces
         Task<bool> CreateCarsAsync(List<CreateCarDto> dtos);
         Task<bool> UpdateCarAsync(Guid id, UpdateCarDto updateDto);
 
-        Task<IEnumerable<Car>> GetPaginatedAsync(int pageNumber, int pageSize, string? search = null);
-        Task<int> GetCountAsync(string? search = null);
+        Task<IEnumerable<CarDto>> GetPaginatedAsync(
+                    int pageNumber,
+                    int pageSize,
+                    string? search = null,
+                    Guid? locationId = null,
+                    Guid? ownershipId = null);
+        Task<int> GetCountAsync(string? search = null, Guid? locationId = null, Guid? ownershipId = null);
 
         Task<Car?> GetCarDetailsAsync(Guid id);
     }
