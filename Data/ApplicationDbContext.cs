@@ -25,15 +25,6 @@ namespace TrakingCar.Data
                 .Property(u => u.Role)
                 .HasConversion<string>();
             // ------------------------------------------------------
-            // Ownership ↔ Location (One-to-Many)
-            // ------------------------------------------------------
-            modelBuilder.Entity<Ownership>()
-                .HasOne(a => a.Location)
-                .WithMany(l => l.Ownerships)
-                .HasForeignKey(a => a.LocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // ------------------------------------------------------
             // Location ↔ Car (One-to-Many)
             // ------------------------------------------------------
             modelBuilder.Entity<Car>()

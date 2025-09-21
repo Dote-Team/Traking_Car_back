@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using TrakingCar.Data;
 using TrakingCar.Models;
 
-namespace Tracking.Middlewares
+namespace TrackingCar.Middlewares
 {
     using AppLogEntry = LogEntry;
 
