@@ -17,6 +17,8 @@ namespace TrakingCar.Dtos
         public string? Note { get; set; }
         public string? TrackingCode { get; set; }
 
+        public string? LocationName { get; set; }
+        public string? OwnershipName { get; set; }
         public List<AttachmentDto>? Attachments { get; set; }
     }
 

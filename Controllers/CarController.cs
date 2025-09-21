@@ -38,14 +38,19 @@ namespace TrakingCar.Controllers
         public async Task<ActionResult<APIResponse>> GetAllCars(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 25,
-            [FromQuery] string? search = null)
+            [FromQuery] string? search = null,
+            [FromQuery] Guid? locationId = null,
+            [FromQuery] Guid? ownershipId = null)
         {
             try
             {
-                var total = await _carRepository.GetCountAsync(search);
-                var paged = await _carRepository.GetPaginatedAsync(pageNumber, pageSize, search);
+                // احصل على العدد الإجمالي بعد تطبيق الفلاتر
+                var total = await _carRepository.GetCountAsync(search, locationId, ownershipId);
 
-                var result = new PaginatedResponse<Car>
+                // احصل على البيانات المفلترة والمجزأة
+                var paged = await _carRepository.GetPaginatedAsync(pageNumber, pageSize, search, locationId, ownershipId);
+
+                var result = new PaginatedResponse<CarDto>
                 {
                     Data = paged,
                     TotalRecords = total,
@@ -64,6 +69,7 @@ namespace TrakingCar.Controllers
                 return StatusCode(500, _response);
             }
         }
+
 
         [HttpGet("{id:Guid}")]
         [Authorize]
