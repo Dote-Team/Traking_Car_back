@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TrakingCar.Models;
-using TrakingCar.Dto.car;
 using TrakingCar.Dto.attachment;
 using TrakingCar.Dto.location;
 using TrakingCar.Dto.ownership;
@@ -29,7 +28,7 @@ namespace Tracking.Helpers
 
             // 📎 Attachment mappings
             CreateMap<Attachment, AttachmentDetailsDto>().ReverseMap();
-            CreateMap<Attachment, TrakingCar.Dto.attachment.CreateAttachmentDto>().ReverseMap();
+            CreateMap<Attachment, CreateAttachmentDto>().ReverseMap();
             CreateMap<Attachment, UpdateAttachmentDto>().ReverseMap();
 
             // 📍 Location mappings

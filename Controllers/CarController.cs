@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Tracking.Dto;
 using TrackingCar.Dto;
-using TrakingCar.Dto.car;
 using TrackingCar.Middlewares;
 
 namespace TrakingCar.Controllers
