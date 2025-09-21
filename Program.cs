@@ -202,6 +202,24 @@ app.MapGet("/users/images/{fileName}", (string fileName) =>
     return Results.File(imagePath, $"image/{extension}");
 });
 
+app.MapGet("/cars/images/{fileName}", (string fileName) =>
+{
+    var imagePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "uploads", "CarAttachments", fileName);
+
+    // التحقق من وجود الملف
+    if (!System.IO.File.Exists(imagePath))
+        return Results.NotFound("Car image not found.");
+
+    // التحقق من صيغة الصورة
+    var extension = Path.GetExtension(fileName).TrimStart('.').ToLower();
+    if (!new[] { "jpg", "jpeg", "png", "gif" }.Contains(extension))
+        return Results.BadRequest("Unsupported image format.");
+
+    // إعادة الصورة مع نوعها الصحيح
+    return Results.File(imagePath, $"image/{extension}");
+});
+
+
 app.MapControllers();
 
 
