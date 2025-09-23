@@ -315,6 +315,7 @@ namespace TrakingCar.Controllers
 
 
 
+
         [HttpDelete("{id:Guid}")]
         [Authorize]
         public async Task<ActionResult<APIResponse>> DeleteCar(Guid id)
@@ -324,7 +325,11 @@ namespace TrakingCar.Controllers
 
             try
             {
-                var car = await _carRepository.GetCarDetailsAsync(id);
+                // ✅ نجلب السيارة مع المرفقات
+                var car = await _context.Cars
+                    .Include(c => c.Attachments)
+                    .FirstOrDefaultAsync(c => c.Id == id);
+
                 if (car == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -343,13 +348,30 @@ namespace TrakingCar.Controllers
                     return NotFound(_response);
                 }
 
-                await _carRepository.RemoveAsync(car);
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
+                foreach (var attachment in car.Attachments)
+                {
+                    if (!string.IsNullOrEmpty(attachment.File))
+                    {
+                        var filePath = Path.Combine(uploadPath, attachment.File);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+                    }
+                }
+
+                // ✅ نحذف المرفقات من قاعدة البيانات
+                _context.Attachments.RemoveRange(car.Attachments);
+
+                // ✅ نحذف السيارة نفسها
+                _context.Cars.Remove(car);
+
+                await _context.SaveChangesAsync();
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 _response.Result = new
                 {
-                    Message = "تم حذف السيارة بنجاح.",
+                    Message = "تم حذف السيارة والمرفقات المرتبطة بها بنجاح.",
                     CarId = id
                 };
 
@@ -357,7 +379,7 @@ namespace TrakingCar.Controllers
                     "حذف",
                     HttpContext.Request.Path,
                     $"البيانات المدخلة: CarId = {id}",
-                    $"✅ تم حذف السيارة بنجاح: {id}",
+                    $"✅ تم حذف السيارة والمرفقات بنجاح: {id}",
                     200,
                     userName,
                     ip);
@@ -382,6 +404,7 @@ namespace TrakingCar.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
 
     }
 }

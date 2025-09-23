@@ -12,7 +12,7 @@ using TrakingCar.Data;
 namespace TrakingCar.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250921193429_init")]
+    [Migration("20250922183823_init")]
     partial class init
     {
         /// <inheritdoc />

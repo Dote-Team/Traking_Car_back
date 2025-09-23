@@ -44,7 +44,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(MyAllowSpecificOrigins, policyBuilder =>
     {
         policyBuilder
-            .WithOrigins("http://localhost:5000")
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -120,6 +120,13 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DataSeeder.SeedAsync(db);
+}
+
 
 // ? Middlewares
 app.UseForwardedHeaders(new ForwardedHeadersOptions

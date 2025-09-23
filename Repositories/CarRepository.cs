@@ -20,69 +20,7 @@ namespace TrakingCar.Repositories
             _mapper = mapper;
         }
 
-        //public async Task<bool> CreateCarsAsync(List<CreateCarDto> dtos)
-        //{
-        //    using var transaction = await _context.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        foreach (var dto in dtos)
-        //        {
-        //            var car = new Car
-        //            {
-        //                CarType = dto.CarType,
-        //                ChassisNumber = dto.ChassisNumber,
-        //                CarNumber = dto.CarNumber,
-        //                Status = dto.Status,
-        //                OwnershipId = dto.OwnershipId,
-        //                LocationId = dto.LocationId,
-        //                ReceiptDate = dto.ReceiptDate,
-        //                BodyCondition = dto.BodyCondition,
-        //                Note = dto.Note,
-        //                TrackingCode = dto.TrackingCode,
-        //                CreatedAt = DateTime.UtcNow,
-        //                UpdatedAt = DateTime.UtcNow
-        //            };
-
-        //            // حفظ المرفقات
-        //            if (dto.Attachments != null && dto.Attachments.Any())
-        //            {
-        //                car.Attachments = new List<Attachment>();
-        //                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "CarAttachments");
-        //                if (!Directory.Exists(uploadPath))
-        //                    Directory.CreateDirectory(uploadPath);
-
-        //                foreach (var attach in dto.Attachments)
-        //                {
-        //                    if (attach.FileContent != null)
-        //                    {
-        //                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(attach.FileContent.FileName)}";
-        //                        var filePath = Path.Combine(uploadPath, fileName);
-
-        //                        using var stream = new FileStream(filePath, FileMode.Create);
-        //                        await attach.FileContent.CopyToAsync(stream);
-
-        //                        car.Attachments.Add(new Attachment
-        //                        {
-        //                            File = fileName,
-        //                            LocationId = attach.LocationId
-        //                        });
-        //                    }
-        //                }
-        //            }
-
-        //            await _context.Cars.AddAsync(car);
-        //        }
-
-        //        await _context.SaveChangesAsync();
-        //        await transaction.CommitAsync();
-        //        return true;
-        //    }
-        //    catch
-        //    {
-        //        await transaction.RollbackAsync();
-        //        throw;
-        //    }
-        //}
+ 
 
         public async Task<bool> CreateCarsAsync(List<CreateCarDto> dtos)
         {
