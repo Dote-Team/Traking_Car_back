@@ -10,7 +10,7 @@ namespace TrakingCar.Dto.Car
         public string? Status { get; set; }
         public Guid? OwnershipId { get; set; }
         public Guid? LocationId { get; set; }
-        public DateTime ReceiptDate { get; set; }
+        public DateTime? ReceiptDate { get; set; }
         public string? BodyCondition { get; set; }
         public string? Note { get; set; }
         public string? TrackingCode { get; set; }
